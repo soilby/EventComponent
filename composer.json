@@ -6,8 +6,8 @@
         "type": "vcs"
     },
     "autoload": {
-        "psr-0": {
-            "Soilby": "Soilby"
+        "psr-4": {
+            "Soilby\\": "Soilby"
         }
     }
 }
