@@ -1,0 +1,13 @@
+{
+    "name": "soil/event-component",
+    "version": "0.0.1",
+    "dist": {
+        "url": "https://github.com/soilby/event-component",
+        "type": "vcs"
+    },
+    "autoload": {
+        "psr-0": {
+            "Soilby": "Soilby"
+        }
+    }
+}
