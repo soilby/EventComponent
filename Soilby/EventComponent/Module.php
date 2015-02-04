@@ -1,6 +1,6 @@
 <?php
 
-namespace Events;
+namespace Soilby\EventComponent;
 
 use Events\Service\EventLogger;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
@@ -43,10 +43,7 @@ class Module implements
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
                 ),
-            ),
-//            'Zend\Loader\ClassMapAutoloader' => array(
-//                __DIR__ . "/autoload_classmap.php"
-//            ),
+            )
         );
     }
 

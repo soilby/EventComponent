@@ -6,7 +6,7 @@
  * Time: 21.28
  */
 
-namespace Events\Service;
+namespace Soilby\EventComponent\Service;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

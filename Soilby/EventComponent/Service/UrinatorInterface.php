@@ -6,7 +6,7 @@
  * Time: 19.59
  */
 
-namespace Events\Service;
+namespace Soilby\EventComponent\Service;
 
 
 interface UrinatorInterface {

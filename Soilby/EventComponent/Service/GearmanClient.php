@@ -6,7 +6,7 @@
  * Time: 21.21
  */
 
-namespace Events\Service;
+namespace Soilby\EventComponent\Service;
 
 
 class GearmanClient {

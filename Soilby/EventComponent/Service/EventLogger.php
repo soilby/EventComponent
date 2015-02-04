@@ -1,5 +1,5 @@
 <?php
-namespace Events\Service;
+namespace Soilby\EventComponent\Service;
 
 /**
  * Created by PhpStorm.
