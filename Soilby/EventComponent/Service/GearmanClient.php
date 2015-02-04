@@ -9,7 +9,9 @@
 namespace Soilby\EventComponent\Service;
 
 
-class GearmanClient {
+use Events\Service\LogCarrierInterface;
+
+class GearmanClient implements LogCarrierInterface {
 
     protected $serverIP;
     protected $serverPort;
@@ -32,23 +34,25 @@ class GearmanClient {
 
     /**
      * @param string $name
-     * @param string $jobStr
+     * @param string $message
      * @param int    $priority
+     *
+     * @throws \Exception
      */
-    public function addJob($name, $jobStr, $priority = 0)  {
+    public function send($name, $message, $priority = 0)  {
         switch ($priority)  {
             case 0:
-                $this->getClient()->doBackground($name, $jobStr);
+                $this->getClient()->doBackground($name, $message);
 
                 break;
 
             case 1:
-                $this->getClient()->doHighBackground($name, $jobStr);
+                $this->getClient()->doHighBackground($name, $message);
 
                 break;
 
             case -1:
-                $this->getClient()->doLowBackground($name, $jobStr);
+                $this->getClient()->doLowBackground($name, $message);
 
                 break;
 

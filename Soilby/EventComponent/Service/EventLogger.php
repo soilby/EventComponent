@@ -11,12 +11,13 @@ namespace Soilby\EventComponent\Service;
 use Api\Services\URInator;
 use EasyRdf\Graph;
 use  \EasyRdf\Literal\DateTime;
+use EasyRdf\RdfNamespace;
+use Events\Service\LogCarrierInterface;
 use Soilby\EventComponent\Entity\CommentEvent;
 use Soilby\EventComponent\Entity\GenericEvent;
 
 class EventLogger {
 
-    protected $ontologyURI;
     protected $ontologyAbbr;
 
     const EVENT_CREATE = 'CREATE';
@@ -27,7 +28,14 @@ class EventLogger {
     const EVENT_COMPLETE = 'COMPLETE';
     const EVENT_COMMENT = 'COMMENT'; //derived from create
 
-    protected $eventClasses = [];
+    /**
+     * @var LogCarrierInterface
+     */
+    protected $logCarrier;
+
+
+    protected $ontologyConfig = [];
+    protected $carrierConfig = [];
 
     /**
      * @var Graph
@@ -39,12 +47,13 @@ class EventLogger {
      */
     protected $urinator;
 
-    public function __construct($ontologyURI, $ontologyAbbr, $eventClassification = [])   {
-        $this->ontologyURI = $ontologyURI;
-        $this->ontologyAbbr = $ontologyAbbr;
-        $this->eventClasses = $eventClassification;
+    public function __construct($ontologyConfig, $carrierConfig)   {
+        $this->ontologyConfig = $ontologyConfig;
+        $this->carrierConfig = $carrierConfig;
 
-        \EasyRdf\RdfNamespace::set($ontologyAbbr, $ontologyURI);
+        $this->ontologyAbbr = $ontologyConfig['ontology_abbr'];
+
+        RdfNamespace::set($ontologyConfig['ontology_abbr'], $ontologyConfig['ontology_uri']);
 
         $this->graph = new Graph();
     }
@@ -56,8 +65,6 @@ class EventLogger {
     {
         $this->urinator = $urinator;
     }
-
-
 
 
     public function raiseCreate($target, $agent)    {
@@ -104,14 +111,19 @@ class EventLogger {
      * @param $eventName
      * @param array $params
      * @return \EasyRdf\Resource
+     *
      * @throws \Exception
      */
-    public function getEvent($eventName, $params = [])   {
+    public function getEvent($eventName)   {
         $eventUniqueCode = (string) new \MongoId();
-        if (!array_key_exists($eventName, $this->eventClasses))  {
+
+        $classes = $this->ontologyConfig['event_classification'];
+
+        if (!array_key_exists($eventName, $classes))  {
             throw new \Exception('Event type is not supported');
         }
-        $eventClass = $this->eventClasses[$eventName];
+
+        $eventClass = $classes[$eventName];
 
         $event = $this->graph->resource(
             $this->ontologyAbbr . ':event_' . $eventUniqueCode,
@@ -121,6 +133,23 @@ class EventLogger {
 
 
         return $event;
+    }
+
+
+
+    /**
+     * @param LogCarrierInterface $logCarrier
+     */
+    public function setLogCarrier(LogCarrierInterface $logCarrier)
+    {
+        $this->logCarrier = $logCarrier;
+    }
+
+    public function flush() {
+        if (!$this->isEmpty()) {
+            $rdfQueue = $this->getRDFQueue($this->carrierConfig['output_rdf_format']);
+            $this->logCarrier->send($this->carrierConfig['queue_stream_name'], $rdfQueue);
+        }
     }
 
 } 
