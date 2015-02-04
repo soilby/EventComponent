@@ -9,5 +9,9 @@
         "psr-4": {
             "Soilby\\": "Soilby"
         }
+    },
+    "require": {
+        "php": ">=5.4",
+        "easyrdf/easyrdf": "dev-master"
     }
 }
