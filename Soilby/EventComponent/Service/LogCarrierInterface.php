@@ -6,7 +6,7 @@
  * Time: 22.56
  */
 
-namespace Events\Service;
+namespace Soilby\EventComponent\Service;
 
 
 interface LogCarrierInterface {

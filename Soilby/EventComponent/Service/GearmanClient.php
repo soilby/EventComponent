@@ -9,7 +9,6 @@
 namespace Soilby\EventComponent\Service;
 
 
-use Events\Service\LogCarrierInterface;
 
 class GearmanClient implements LogCarrierInterface {
 
