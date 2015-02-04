@@ -8,11 +8,9 @@ namespace Soilby\EventComponent\Service;
  * Time: 17.20
  */
 
-use Api\Services\URInator;
 use EasyRdf\Graph;
 use  \EasyRdf\Literal\DateTime;
 use EasyRdf\RdfNamespace;
-use Events\Service\LogCarrierInterface;
 use Soilby\EventComponent\Entity\CommentEvent;
 use Soilby\EventComponent\Entity\GenericEvent;
 
