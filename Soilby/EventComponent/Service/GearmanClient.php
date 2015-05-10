@@ -36,29 +36,29 @@ class GearmanClient implements LogCarrierInterface {
      * @param string $message
      * @param int    $priority
      *
+     * @return string
+     *
      * @throws \Exception
      */
     public function send($name, $message, $priority = 0)  {
         switch ($priority)  {
             case 0:
-                $this->getClient()->doBackground($name, $message);
+                return $this->getClient()->doBackground($name, $message);
 
                 break;
 
             case 1:
-                $this->getClient()->doHighBackground($name, $message);
+                return $this->getClient()->doHighBackground($name, $message);
 
                 break;
 
             case -1:
-                $this->getClient()->doLowBackground($name, $message);
+                return $this->getClient()->doLowBackground($name, $message);
 
                 break;
 
             default:
                 throw new \Exception('Priority can be 1, 0 or -1');
         }
-
-        return true;
     }
 } 
