@@ -59,6 +59,6 @@ class GearmanClient implements LogCarrierInterface {
                 throw new \Exception('Priority can be 1, 0 or -1');
         }
 
-
+        return true;
     }
 } 

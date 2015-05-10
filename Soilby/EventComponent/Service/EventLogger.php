@@ -56,6 +56,15 @@ class EventLogger {
         $this->graph = new Graph();
     }
 
+
+    public function getOntologyAbbr()   {
+        return $this->ontologyAbbr;
+    }
+
+    public function getUrinator()   {
+        return $this->urinator;
+    }
+
     /**
      * @param mixed $urinator
      */
@@ -90,6 +99,12 @@ class EventLogger {
 
     }
 
+    public function raiseCampaignComplete($projectOrCampaign) {
+        $event = $this->getEvent(self::EVENT_COMPLETE);
+
+        $event->addResource($this->ontologyAbbr . ':target', $this->urinator->generateURI($projectOrCampaign));
+    }
+
 
     /**
      * @param string $format
@@ -98,6 +113,7 @@ class EventLogger {
      * @return mixed
      */
     public function getRDFQueue($format = 'turtle')    {
+        echo $this->graph->dump('text');
         return $this->graph->serialise($format);
     }
 
@@ -107,7 +123,6 @@ class EventLogger {
 
     /**
      * @param $eventName
-     * @param array $params
      * @return \EasyRdf\Resource
      *
      * @throws \Exception
