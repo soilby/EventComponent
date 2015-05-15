@@ -122,13 +122,15 @@ class EventLogger {
     }
 
     /**
-     * @param $eventName
+     * @param $eventName string Use constant from this class
+     * @param $uniqueId string Unique identificator for event, can be provided or generated randomly
+     *
      * @return \EasyRdf\Resource
      *
      * @throws \Exception
      */
-    public function getEvent($eventName)   {
-        $eventUniqueCode = (string) new \MongoId();
+    public function getEvent($eventName, $uniqueId = null)   {
+        if (!$uniqueId) $uniqueId = 'event_' . $eventName . '_' . (string) new \MongoId();
 
         $classes = $this->ontologyConfig['event_classification'];
 
@@ -139,7 +141,7 @@ class EventLogger {
         $eventClass = $classes[$eventName];
 
         $event = $this->graph->resource(
-            $this->ontologyAbbr . ':event_' . $eventUniqueCode,
+            $this->ontologyAbbr . ':' . $uniqueId,
             $this->ontologyAbbr . ':' . $eventClass
         );
         $event->set($this->ontologyAbbr . ':date', new DateTime());
@@ -161,7 +163,10 @@ class EventLogger {
     public function flush() {
         if (!$this->isEmpty()) {
             $rdfQueue = $this->getRDFQueue($this->carrierConfig['output_rdf_format']);
-            $this->logCarrier->send($this->carrierConfig['queue_stream_name'], $rdfQueue);
+            $sendStatus = $this->logCarrier->send($this->carrierConfig['queue_stream_name'], $rdfQueue);
+            if ($sendStatus)    {
+                $this->graph = new Graph(); //clear graph
+            }
         }
     }
 
