@@ -49,14 +49,21 @@ class HttpGearmanClient implements LogCarrierInterface {
 
         $this->lastResponse = $response;
 
-        if ($response->getStatus() === 200) {
-            $data = json_decode($response->getBody(), true);
+        $data = json_decode($response->getBody(), true);
+        $httpStatus = $response->getStatus();
 
-            return $data['success'];
+        if ($httpStatus === 200 && is_array($data)) {
+
+            return $data;
 
         }
         else    {
-            return false;
+            if (is_array($data))    {
+                throw new \Exception("Job sent request end up with HTTP$httpStatus. {$data['error']}");
+            }
+            else    {
+                throw new \Exception("Job sent request end up with HTTP$httpStatus.");
+            }
         }
     }
 

@@ -24,6 +24,7 @@ class EventLogger {
     const EVENT_DECLINE = 'DECLINE';
     const EVENT_SUBSCRIBE = 'SUBSCRIBE';
     const EVENT_COMPLETE = 'COMPLETE';
+    const EVENT_REMIND = 'REMIND';
     const EVENT_COMMENT = 'COMMENT'; //derived from create
 
     /**
@@ -113,7 +114,8 @@ class EventLogger {
      * @return mixed
      */
     public function getRDFQueue($format = 'turtle')    {
-        echo $this->graph->dump('text');
+        echo '[' . date('Y-m-d H:i:s') . ']';
+        echo $this->graph->dump('text') . PHP_EOL . PHP_EOL;
         return $this->graph->serialise($format);
     }
 
@@ -164,8 +166,12 @@ class EventLogger {
         if (!$this->isEmpty()) {
             $rdfQueue = $this->getRDFQueue($this->carrierConfig['output_rdf_format']);
             $sendStatus = $this->logCarrier->send($this->carrierConfig['queue_stream_name'], $rdfQueue);
-            if ($sendStatus)    {
+            if ($sendStatus['success'])    {
                 $this->graph = new Graph(); //clear graph
+            }
+            else    {
+                $message = $sendStatus['error'];
+                throw new \Exception("Graph cannot be saved. $message");
             }
         }
     }
