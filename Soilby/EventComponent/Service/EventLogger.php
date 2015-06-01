@@ -26,6 +26,7 @@ class EventLogger {
     const EVENT_COMPLETE = 'COMPLETE';
     const EVENT_REMIND = 'REMIND';
     const EVENT_COMMENT = 'COMMENT'; //derived from create
+    const EVENT_PAID = 'PAID';
 
     /**
      * @var LogCarrierInterface

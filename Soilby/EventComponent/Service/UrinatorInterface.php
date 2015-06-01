@@ -12,4 +12,5 @@ namespace Soilby\EventComponent\Service;
 interface UrinatorInterface {
 
     public function generateURI($entity);
-} 
+    public function assemble($routeName, $params);
+}
