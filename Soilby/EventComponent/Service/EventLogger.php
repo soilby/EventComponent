@@ -26,6 +26,7 @@ class EventLogger {
     const EVENT_COMPLETE = 'COMPLETE';
     const EVENT_REMIND = 'REMIND';
     const EVENT_COMMENT = 'COMMENT'; //derived from create
+    const EVENT_VOTE = 'VOTE'; //derived from create
     const EVENT_PAID = 'PAID';
 
     /**
@@ -101,6 +102,17 @@ class EventLogger {
 
     }
 
+    public function raiseVote($vote, $voterAgent, $agent, $voteValue, $relatedObject) {
+        $event = $this->getEvent(self::EVENT_VOTE);
+
+        $event->addResource($this->ontologyAbbr . ':target', $this->urinator->generateURI($vote));
+        $event->addResource($this->ontologyAbbr . ':voterAgent', $this->urinator->generateURI($voterAgent));
+        $event->addResource($this->ontologyAbbr . ':agent', $this->urinator->generateURI($agent));
+        $event->addLiteral($this->ontologyAbbr . ':voteValue', $voteValue);
+        $event->addResource($this->ontologyAbbr . ':relatedObject', $this->urinator->generateURI($relatedObject));
+
+    }
+
     public function raiseCampaignComplete($projectOrCampaign) {
         $event = $this->getEvent(self::EVENT_COMPLETE);
 
@@ -115,8 +127,8 @@ class EventLogger {
      * @return mixed
      */
     public function getRDFQueue($format = 'turtle')    {
-        echo '[' . date('Y-m-d H:i:s') . ']';
-        echo $this->graph->dump('text') . PHP_EOL . PHP_EOL;
+//        echo '[' . date('Y-m-d H:i:s') . ']';
+//        echo $this->graph->dump('text') . PHP_EOL . PHP_EOL;
         return $this->graph->serialise($format);
     }
 
