@@ -36,7 +36,7 @@ class EventLogger {
 
 
     protected $ontologyConfig = [];
-    protected $carrierConfig = [];
+    protected $protocolSettings = [];
 
     /**
      * @var Graph
@@ -48,9 +48,9 @@ class EventLogger {
      */
     protected $urinator;
 
-    public function __construct($ontologyConfig, $carrierConfig)   {
+    public function __construct($ontologyConfig, $protocolSettings)   {
         $this->ontologyConfig = $ontologyConfig;
-        $this->carrierConfig = $carrierConfig;
+        $this->protocolSettings = $protocolSettings;
 
         $this->ontologyAbbr = $ontologyConfig['ontology_abbr'];
 
@@ -177,8 +177,8 @@ class EventLogger {
 
     public function flush() {
         if (!$this->isEmpty()) {
-            $rdfQueue = $this->getRDFQueue($this->carrierConfig['output_rdf_format']);
-            $sendStatus = $this->logCarrier->send($this->carrierConfig['queue_stream_name'], $rdfQueue);
+            $rdfQueue = $this->getRDFQueue($this->protocolSettings['output_rdf_format']);
+            $sendStatus = $this->logCarrier->sendRaw($this->protocolSettings['queue_stream_name'], $rdfQueue);
             if ($sendStatus['success'])    {
                 $this->graph = new Graph(); //clear graph
             }

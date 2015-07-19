@@ -10,7 +10,7 @@ namespace Soilby\EventComponent\Service;
 
 
 
-class GearmanClient implements LogCarrierInterface {
+class GearmanClient extends AbstractClient implements LogCarrierInterface {
 
     protected $serverIP;
     protected $serverPort;
@@ -40,7 +40,7 @@ class GearmanClient implements LogCarrierInterface {
      *
      * @throws \Exception
      */
-    public function send($name, $message, $priority = 0)  {
+    public function sendRaw($name, $message, $priority = 0)  {
         switch ($priority)  {
             case 0:
                 return $this->getClient()->doBackground($name, $message);

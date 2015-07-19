@@ -10,10 +10,11 @@ namespace Soilby\EventComponent\Service;
 
 
 
+use EasyRdf\Graph;
 use EasyRdf\Http\Client;
 use EasyRdf\Http\Response;
 
-class HttpGearmanClient implements LogCarrierInterface {
+class HttpGearmanClient extends AbstractClient implements LogCarrierInterface {
 
     protected $endpointURL;
 
@@ -24,11 +25,13 @@ class HttpGearmanClient implements LogCarrierInterface {
      */
     protected $client;
 
+
     public function __construct($endpointURL, $httpClient)   {
         $this->endpointURL = $endpointURL;
 
         $this->client = $httpClient;
     }
+
 
     /**
      * @param string $name will not used in this implementation
@@ -39,7 +42,7 @@ class HttpGearmanClient implements LogCarrierInterface {
      *
      * @throws \Exception
      */
-    public function send($name, $message, $priority = 0)    {
+    public function sendRaw($name, $message, $priority = 0)    {
         $this->client->setUri($this->endpointURL);
         $this->client->setMethod('POST');
 

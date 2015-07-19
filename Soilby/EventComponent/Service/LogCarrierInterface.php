@@ -9,8 +9,11 @@
 namespace Soilby\EventComponent\Service;
 
 
+use EasyRdf\Graph;
+
 interface LogCarrierInterface {
 
-    public function send($name, $message, $priority = 0);
+    public function send(Graph $graph, $priority = 0);
+    public function sendRaw($name, $message, $priority = 0);
 
 } 
