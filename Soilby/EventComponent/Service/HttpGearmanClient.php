@@ -26,9 +26,12 @@ class HttpGearmanClient extends AbstractClient implements LogCarrierInterface {
     protected $client;
 
 
-    public function __construct($endpointURL, $httpClient)   {
+    public function __construct($endpointURL, $httpClient = null)   {
         $this->endpointURL = $endpointURL;
 
+        if (!$httpClient)   {
+            $httpClient = new Client();
+        }
         $this->client = $httpClient;
     }
 
