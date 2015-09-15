@@ -179,10 +179,22 @@ class EventLogger {
         $this->logCarrier = $logCarrier;
     }
 
+    /**
+     * @return LogCarrierInterface
+     */
+    public function getLogCarrier()
+    {
+        return $this->logCarrier;
+    }
+
+
+
     public function flush() {
         if (!$this->isEmpty()) {
             $rdfQueue = $this->getRDFQueue($this->protocolSettings['output_rdf_format']);
+
             $sendStatus = $this->logCarrier->sendRaw($this->protocolSettings['queue_stream_name'], $rdfQueue);
+
             if ($sendStatus['success'])    {
                 $this->graph = new Graph(); //clear graph
             }
