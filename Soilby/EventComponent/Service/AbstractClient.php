@@ -52,4 +52,4 @@ abstract class AbstractClient {
 
 
     abstract public function sendRaw($name, $message, $priority = 0);
-} 
+}

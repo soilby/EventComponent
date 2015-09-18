@@ -23,6 +23,7 @@ class EventLogger {
     const EVENT_CLAIM = 'CLAIM';
     const EVENT_DECLINE = 'DECLINE';
     const EVENT_SUBSCRIBE = 'SUBSCRIBE';
+    const EVENT_JOIN = 'JOIN';
     const EVENT_COMPLETE = 'COMPLETE';
     const EVENT_REMIND = 'REMIND';
     const EVENT_COMMENT = 'COMMENT'; //derived from create
@@ -174,6 +175,8 @@ class EventLogger {
     {
         $this->logCarrier = $logCarrier;
     }
+
+
 
     public function flush() {
         if (!$this->isEmpty()) {
