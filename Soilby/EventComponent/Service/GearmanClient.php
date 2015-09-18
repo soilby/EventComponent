@@ -43,22 +43,35 @@ class GearmanClient extends AbstractClient implements LogCarrierInterface {
     public function sendRaw($name, $message, $priority = 0)  {
         switch ($priority)  {
             case 0:
-                return $this->getClient()->doBackground($name, $message);
+                $messageId = $this->getClient()->doBackground($name, $message);
 
                 break;
 
             case 1:
-                return $this->getClient()->doHighBackground($name, $message);
+                $messageId = $this->getClient()->doHighBackground($name, $message);
 
                 break;
 
             case -1:
-                return $this->getClient()->doLowBackground($name, $message);
+                $messageId = $this->getClient()->doLowBackground($name, $message);
 
                 break;
 
             default:
                 throw new \Exception('Priority can be 1, 0 or -1');
+        }
+
+        if ($messageId) {
+            return [
+                'success' => true,
+                'messageId' => $messageId
+            ];
+        }
+        else    {
+            return [
+                'success' => false,
+                'error' => 'Gearman return null'
+            ];
         }
     }
 } 

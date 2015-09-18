@@ -9,6 +9,7 @@ namespace Soilby\EventComponent\Service;
  */
 
 use EasyRdf\Graph;
+use EasyRdf\Literal\Date;
 use  \EasyRdf\Literal\DateTime;
 use EasyRdf\RdfNamespace;
 use Soilby\EventComponent\Entity\CommentEvent;
@@ -94,13 +95,16 @@ class EventLogger {
 
     }
 
-    public function raiseComment($comment, $agent, $relatedObject) {
-        $event = $this->getEvent(self::EVENT_COMMENT);
+    public function raiseComment($comment, $agent, $relatedObject, $parent = null) {
 
-        $event->addResource($this->ontologyAbbr . ':target', $this->urinator->generateURI($comment));
-        $event->addResource($this->ontologyAbbr . ':agent', $this->urinator->generateURI($agent));
-        $event->addResource($this->ontologyAbbr . ':relatedObject', $this->urinator->generateURI($relatedObject));
-
+        $targetURI = $this->urinator->generateURI($comment);
+        $commentRes = $this->graph->resource($targetURI, $this->ontologyAbbr . ':Comment');
+        $commentRes->addLiteral($this->ontologyAbbr . ':creationDate', new DateTime(new \DateTime()));
+        $commentRes->addResource($this->ontologyAbbr . ':author', $this->urinator->generateURI($agent));
+        $commentRes->addResource($this->ontologyAbbr . ':relatedObject', $this->urinator->generateURI($relatedObject));
+        if ($parent)    {
+            $commentRes->addResource($this->ontologyAbbr . ':parent', $this->urinator->generateURI($parent));
+        }
     }
 
     public function raiseVote($vote, $voterAgent, $agent, $voteValue, $relatedObject) {
@@ -176,12 +180,21 @@ class EventLogger {
         $this->logCarrier = $logCarrier;
     }
 
+    /**
+     * @return LogCarrierInterface
+     */
+    public function getLogCarrier()
+    {
+        return $this->logCarrier;
+    }
 
 
     public function flush() {
         if (!$this->isEmpty()) {
             $rdfQueue = $this->getRDFQueue($this->protocolSettings['output_rdf_format']);
+
             $sendStatus = $this->logCarrier->sendRaw($this->protocolSettings['queue_stream_name'], $rdfQueue);
+
             if ($sendStatus['success'])    {
                 $this->graph = new Graph(); //clear graph
             }
