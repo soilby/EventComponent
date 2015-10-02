@@ -15,8 +15,8 @@ abstract class AbstractClient {
 
 
     protected $outputConfig = [
-        'output_rdf_format' => 'ntriples',
-        'queue_stream_name' => 'soil_event'
+//        'output_rdf_format' => 'ntriples',
+//        'queue_stream_name' => 'soil_event'
     ];
 
     /**
@@ -46,10 +46,9 @@ abstract class AbstractClient {
 
     public function send(Graph $graph, $priority = 0) {
         $s = $this->getGraphAsString($graph);
-
         return $this->sendRaw($this->getOutputConfig()['queue_stream_name'], $s, $priority);
     }
 
 
     abstract public function sendRaw($name, $message, $priority = 0);
-} 
+}

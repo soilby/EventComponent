@@ -24,6 +24,7 @@ class EventLogger {
     const EVENT_CLAIM = 'CLAIM';
     const EVENT_DECLINE = 'DECLINE';
     const EVENT_SUBSCRIBE = 'SUBSCRIBE';
+    const EVENT_JOIN = 'JOIN';
     const EVENT_COMPLETE = 'COMPLETE';
     const EVENT_REMIND = 'REMIND';
     const EVENT_COMMENT = 'COMMENT'; //derived from create
@@ -179,10 +180,21 @@ class EventLogger {
         $this->logCarrier = $logCarrier;
     }
 
+    /**
+     * @return LogCarrierInterface
+     */
+    public function getLogCarrier()
+    {
+        return $this->logCarrier;
+    }
+
+
     public function flush() {
         if (!$this->isEmpty()) {
             $rdfQueue = $this->getRDFQueue($this->protocolSettings['output_rdf_format']);
+
             $sendStatus = $this->logCarrier->sendRaw($this->protocolSettings['queue_stream_name'], $rdfQueue);
+
             if ($sendStatus['success'])    {
                 $this->graph = new Graph(); //clear graph
             }
